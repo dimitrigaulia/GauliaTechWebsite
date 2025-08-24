@@ -1,0 +1,9 @@
+.main-content {
+  min-height: 100vh;
+  padding-top: 80px; // Espaço para o header fixo
+}
+
+// Estilos para o router-outlet
+router-outlet {
+  display: block;
+}

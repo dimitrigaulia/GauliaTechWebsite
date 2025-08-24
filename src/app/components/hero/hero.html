@@ -1,0 +1,104 @@
+<section class="hero">
+  <!-- Background com globo 3D -->
+  <div class="globe-background" #globeContainer></div>
+  
+  <!-- Overlay gradiente -->
+  <div class="hero-overlay"></div>
+  
+  <!-- Conteúdo principal -->
+  <div class="hero-content">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Texto principal -->
+        <div class="hero-text">
+          <h1 class="hero-title animate-fade-in">
+            Transformando o Futuro com
+            <span class="gradient-text">Tecnologia</span>
+          </h1>
+          
+          <p class="hero-subtitle animate-fade-in">
+            Somos uma empresa de consultoria em tecnologia especializada em soluções 
+            inovadoras que conectam o mundo digital. Nossa missão é impulsionar 
+            o sucesso dos nossos clientes através da excelência tecnológica.
+          </p>
+          
+          <div class="hero-stats animate-fade-in">
+            <div class="stat-item">
+              <span class="stat-number">500+</span>
+              <span class="stat-label">Projetos Entregues</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">50+</span>
+              <span class="stat-label">Clientes Satisfeitos</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">24/7</span>
+              <span class="stat-label">Suporte Técnico</span>
+            </div>
+          </div>
+          
+          <div class="hero-actions animate-fade-in">
+            <button class="btn btn-primary" (click)="navigateTo('/services')">
+              Nossos Serviços
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button class="btn btn-secondary" (click)="navigateTo('/contact')">
+              Fale Conosco
+            </button>
+          </div>
+        </div>
+        
+        <!-- Cards de destaque -->
+        <div class="hero-cards">
+          <div class="feature-card animate-slide-in-right">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Desenvolvimento Web</h3>
+            <p>Soluções web modernas e responsivas com as melhores tecnologias do mercado.</p>
+          </div>
+          
+          <div class="feature-card animate-slide-in-right">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Aplicativos Mobile</h3>
+            <p>Apps nativos e híbridos para iOS e Android com foco na experiência do usuário.</p>
+          </div>
+          
+          <div class="feature-card animate-slide-in-right">
+            <div class="card-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3>Consultoria TI</h3>
+            <p>Assessoria especializada para otimizar seus processos e infraestrutura de TI.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator">
+    <div class="scroll-arrow animate-float">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M7 13L12 18L17 13M12 18V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="scroll-text">Role para descobrir</span>
+  </div>
+</section>

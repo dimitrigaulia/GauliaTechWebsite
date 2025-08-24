@@ -1,0 +1,167 @@
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import * as THREE from 'three';
+
+@Component({
+  selector: 'app-globe',
+  templateUrl: './globe.html',
+  styleUrls: ['./globe.scss']
+})
+export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('globeContainer', { static: true }) globeContainer!: ElementRef;
+
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private earth!: THREE.Mesh;
+  private points: THREE.Mesh[] = [];
+  private connections: THREE.Line[] = [];
+  private animationId!: number;
+
+  ngOnInit(): void {
+    this.initThreeJS();
+  }
+
+  ngAfterViewInit(): void {
+    this.animate();
+  }
+
+  ngOnDestroy(): void {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+    if (this.renderer) {
+      this.renderer.dispose();
+    }
+  }
+
+  private initThreeJS(): void {
+    const container = this.globeContainer.nativeElement;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // Scene
+    this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x0a0a0a);
+
+    // Camera
+    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    this.camera.position.z = 5;
+
+    // Renderer
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    this.renderer.setSize(width, height);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(this.renderer.domElement);
+
+    // Earth
+    const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
+    const earthMaterial = new THREE.MeshPhongMaterial({
+      color: 0x1a1a1a,
+      transparent: true,
+      opacity: 0.8,
+      wireframe: true
+    });
+    this.earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    this.scene.add(this.earth);
+
+    // Create connection points
+    this.createConnectionPoints();
+
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+    this.scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0x00d4ff, 1);
+    directionalLight.position.set(5, 3, 5);
+    this.scene.add(directionalLight);
+
+    // Handle resize
+    window.addEventListener('resize', () => this.onWindowResize());
+  }
+
+  private createConnectionPoints(): void {
+    const pointCount = 50;
+    const radius = 2.5;
+
+    // Create points
+    for (let i = 0; i < pointCount; i++) {
+      const phi = Math.acos(-1 + (2 * i) / pointCount);
+      const theta = Math.sqrt(pointCount * Math.PI) * phi;
+
+      const x = radius * Math.cos(theta) * Math.sin(phi);
+      const y = radius * Math.sin(theta) * Math.sin(phi);
+      const z = radius * Math.cos(phi);
+
+      const pointGeometry = new THREE.SphereGeometry(0.02, 8, 8);
+      const pointMaterial = new THREE.MeshBasicMaterial({ 
+        color: 0x00d4ff,
+        transparent: true,
+        opacity: 0.8
+      });
+      
+      const point = new THREE.Mesh(pointGeometry, pointMaterial);
+      point.position.set(x, y, z);
+      this.points.push(point);
+      this.scene.add(point);
+    }
+
+    // Create connections between nearby points
+    for (let i = 0; i < this.points.length; i++) {
+      for (let j = i + 1; j < this.points.length; j++) {
+        const distance = this.points[i].position.distanceTo(this.points[j].position);
+        
+        if (distance < 1.5) {
+          const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+            this.points[i].position,
+            this.points[j].position
+          ]);
+          
+          const lineMaterial = new THREE.LineBasicMaterial({
+            color: 0x00d4ff,
+            transparent: true,
+            opacity: 0.3
+          });
+          
+          const line = new THREE.Line(lineGeometry, lineMaterial);
+          this.connections.push(line);
+          this.scene.add(line);
+        }
+      }
+    }
+  }
+
+  private animate(): void {
+    this.animationId = requestAnimationFrame(() => this.animate());
+
+    // Rotate earth
+    this.earth.rotation.y += 0.005;
+
+    // Animate points
+    this.points.forEach((point, index) => {
+      point.rotation.x += 0.01;
+      point.rotation.y += 0.01;
+      
+      // Pulse effect
+      const scale = 1 + Math.sin(Date.now() * 0.001 + index) * 0.2;
+      point.scale.setScalar(scale);
+    });
+
+    // Animate connections
+    this.connections.forEach((connection, index) => {
+      const opacity = 0.1 + Math.sin(Date.now() * 0.001 + index) * 0.2;
+      (connection.material as THREE.LineBasicMaterial).opacity = opacity;
+    });
+
+    this.renderer.render(this.scene, this.camera);
+  }
+
+  private onWindowResize(): void {
+    const container = this.globeContainer.nativeElement;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    this.camera.aspect = width / height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(width, height);
+  }
+}
