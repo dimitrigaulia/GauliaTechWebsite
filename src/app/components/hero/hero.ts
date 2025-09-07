@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import * as THREE from 'three';
 
@@ -21,27 +21,37 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   private connections: THREE.Line[] = [];
   private animationId!: number;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit() {
-    this.initThreeJS();
-    this.animate();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initThreeJS();
+      this.animate();
+    }
   }
 
   ngAfterViewInit() {
-    this.setupResizeHandler();
+    if (isPlatformBrowser(this.platformId)) {
+      this.setupResizeHandler();
+    }
   }
 
   ngOnDestroy() {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-    }
-    if (this.renderer) {
-      this.renderer.dispose();
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+      if (this.renderer) {
+        this.renderer.dispose();
+      }
     }
   }
 
   private initThreeJS() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     const container = this.globeContainer.nativeElement;
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -131,6 +141,10 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private animate() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.animationId = requestAnimationFrame(() => this.animate());
 
     // Rotate globe
@@ -154,6 +168,10 @@ export class HeroComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setupResizeHandler() {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     window.addEventListener('resize', () => {
       const container = this.globeContainer.nativeElement;
       const width = container.clientWidth;

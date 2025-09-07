@@ -1,0 +1,14 @@
+# Netlify redirects para SPA fallback
+# Redireciona todas as rotas não encontradas para index.html
+/*    /index.html   200
+
+# Redirecionamentos específicos para SEO
+/home    /    301
+/about    /about    301
+/services    /services    301
+/contact    /contact    301
+
+# Redirecionamentos de trailing slash
+/about/    /about    301
+/services/    /services    301
+/contact/    /contact    301

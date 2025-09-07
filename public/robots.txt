@@ -1,3 +1,17 @@
 User-agent: *
 Allow: /
+
+# Bloquear arquivos desnecessários
+Disallow: /assets/
+Disallow: /*.js$
+Disallow: /*.css$
+Disallow: /node_modules/
+
+# Permitir imagens importantes
+Allow: /assets/img/
+
+# Sitemap
 Sitemap: https://gauliatech.com/sitemap.xml
+
+# Crawl-delay para ser respeitoso
+Crawl-delay: 1

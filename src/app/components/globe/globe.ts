@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import * as THREE from 'three';
 
 @Component({
@@ -17,24 +18,36 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
   private connections: THREE.Line[] = [];
   private animationId!: number;
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
   ngOnInit(): void {
-    this.initThreeJS();
+    if (isPlatformBrowser(this.platformId)) {
+      this.initThreeJS();
+    }
   }
 
   ngAfterViewInit(): void {
-    this.animate();
+    if (isPlatformBrowser(this.platformId)) {
+      this.animate();
+    }
   }
 
   ngOnDestroy(): void {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
-    }
-    if (this.renderer) {
-      this.renderer.dispose();
+    if (isPlatformBrowser(this.platformId)) {
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+      }
+      if (this.renderer) {
+        this.renderer.dispose();
+      }
     }
   }
 
   private initThreeJS(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     const container = this.globeContainer.nativeElement;
     const width = container.clientWidth;
     const height = container.clientHeight;
@@ -76,7 +89,9 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.scene.add(directionalLight);
 
     // Handle resize
-    window.addEventListener('resize', () => this.onWindowResize());
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', () => this.onWindowResize());
+    }
   }
 
   private createConnectionPoints(): void {
@@ -131,6 +146,10 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private animate(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     this.animationId = requestAnimationFrame(() => this.animate());
 
     // Rotate earth
@@ -156,6 +175,10 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private onWindowResize(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
     const container = this.globeContainer.nativeElement;
     const width = container.clientWidth;
     const height = container.clientHeight;
