@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header';
 import { FooterComponent } from './components/footer/footer';
 import { GlobeComponent } from './components/globe/globe';
@@ -6,7 +7,7 @@ import { GlobeComponent } from './components/globe/globe';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HeaderComponent, FooterComponent, GlobeComponent],
+  imports: [FormsModule, HeaderComponent, FooterComponent, GlobeComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
