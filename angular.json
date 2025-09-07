@@ -62,7 +62,8 @@
                 "fonts": true
               },
               "sourceMap": false,
-              "extractLicenses": true
+              "extractLicenses": true,
+              "baseHref": "/gaulia-tech/"
             },
             "development": {
               "optimization": false,
