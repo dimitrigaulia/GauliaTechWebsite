@@ -8,7 +8,7 @@
     "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "ng build --configuration production --base-href /gaulia-tech/ && npx angular-cli-ghpages --dir=dist/gaulia-tech/browser"
+    "deploy": "ng build --configuration production --base-href /GauliaTechWebsite/ && npx angular-cli-ghpages --dir=dist/gaulia-tech"
   },
   "prettier": {
     "printWidth": 100,
