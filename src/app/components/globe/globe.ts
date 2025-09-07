@@ -14,9 +14,8 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
   private camera!: THREE.PerspectiveCamera;
   private renderer!: THREE.WebGLRenderer;
   private earth!: THREE.Mesh;
-  private points: THREE.Mesh[] = [];
-  private connections: THREE.Line[] = [];
   private animationId!: number;
+  private rotationSpeed: number = 0.002; // Velocidade de rotação mais lenta
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -70,13 +69,14 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
     const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
     const earthMaterial = new THREE.MeshBasicMaterial({ color: 0x0a0a0a });
     this.earth = new THREE.Mesh(earthGeometry, earthMaterial);
+    
+    // Inclinar a Terra ligeiramente como no mundo real (23.5 graus)
+    this.earth.rotation.x = -0.41; // -23.5 graus em radianos
+    
     this.scene.add(this.earth);
 
     // Continents outlines
     this.addContinents();
-
-    // Create connection points
-    this.createConnectionPoints();
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
@@ -92,56 +92,6 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private createConnectionPoints(): void {
-    const pointCount = 50;
-    const radius = 2.5;
-
-    // Create points
-    for (let i = 0; i < pointCount; i++) {
-      const phi = Math.acos(-1 + (2 * i) / pointCount);
-      const theta = Math.sqrt(pointCount * Math.PI) * phi;
-
-      const x = radius * Math.cos(theta) * Math.sin(phi);
-      const y = radius * Math.sin(theta) * Math.sin(phi);
-      const z = radius * Math.cos(phi);
-
-      const pointGeometry = new THREE.SphereGeometry(0.02, 8, 8);
-      const pointMaterial = new THREE.MeshBasicMaterial({ 
-        color: 0x00d4ff,
-        transparent: true,
-        opacity: 0.8
-      });
-      
-      const point = new THREE.Mesh(pointGeometry, pointMaterial);
-      point.position.set(x, y, z);
-      this.points.push(point);
-      this.scene.add(point);
-    }
-
-    // Create connections between nearby points
-    for (let i = 0; i < this.points.length; i++) {
-      for (let j = i + 1; j < this.points.length; j++) {
-        const distance = this.points[i].position.distanceTo(this.points[j].position);
-        
-        if (distance < 1.5) {
-          const lineGeometry = new THREE.BufferGeometry().setFromPoints([
-            this.points[i].position,
-            this.points[j].position
-          ]);
-          
-          const lineMaterial = new THREE.LineBasicMaterial({
-            color: 0x00d4ff,
-            transparent: true,
-            opacity: 0.3
-          });
-          
-          const line = new THREE.Line(lineGeometry, lineMaterial);
-          this.connections.push(line);
-          this.scene.add(line);
-        }
-      }
-    }
-  }
 
   private addContinents(): void {
     fetch('assets/data/continents.geojson')
@@ -188,23 +138,14 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.animationId = requestAnimationFrame(() => this.animate());
 
-    // Rotate earth
-    this.earth.rotation.y += 0.005;
+    // Rotate earth - rotação suave e contínua como a Terra real
+    this.earth.rotation.y += this.rotationSpeed;
 
-    // Animate points
-    this.points.forEach((point, index) => {
-      point.rotation.x += 0.01;
-      point.rotation.y += 0.01;
-      
-      // Pulse effect
-      const scale = 1 + Math.sin(Date.now() * 0.001 + index) * 0.2;
-      point.scale.setScalar(scale);
-    });
-
-    // Animate connections
-    this.connections.forEach((connection, index) => {
-      const opacity = 0.1 + Math.sin(Date.now() * 0.001 + index) * 0.2;
-      (connection.material as THREE.LineBasicMaterial).opacity = opacity;
+    // Rotate all continent lines with the earth
+    this.scene.children.forEach(child => {
+      if (child instanceof THREE.Line) {
+        child.rotation.y += this.rotationSpeed;
+      }
     });
 
     this.renderer.render(this.scene, this.camera);
