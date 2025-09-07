@@ -75,6 +75,8 @@ Este comando irá:
 2. Configurar o baseHref correto para o GitHub Pages
 3. Fazer deploy para o branch `gh-pages`
 
+**Nota**: Certifique-se de que o repositório tenha o remote `origin` configurado corretamente.
+
 ### Configuração do GitHub Pages
 
 1. Acesse as configurações do repositório no GitHub
