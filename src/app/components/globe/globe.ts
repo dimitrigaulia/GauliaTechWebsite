@@ -68,14 +68,12 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     // Earth
     const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
-    const earthMaterial = new THREE.MeshPhongMaterial({
-      color: 0x1a1a1a,
-      transparent: true,
-      opacity: 0.8,
-      wireframe: true
-    });
+    const earthMaterial = new THREE.MeshBasicMaterial({ color: 0x0a0a0a });
     this.earth = new THREE.Mesh(earthGeometry, earthMaterial);
     this.scene.add(this.earth);
+
+    // Continents outlines
+    this.addContinents();
 
     // Create connection points
     this.createConnectionPoints();
@@ -143,6 +141,44 @@ export class GlobeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     }
+  }
+
+  private addContinents(): void {
+    fetch('assets/data/continents.geojson')
+      .then(response => response.json())
+      .then((data: any) => {
+        const material = new THREE.LineBasicMaterial({ color: 0x00d4ff });
+        const radius = 2.01;
+        data.features.forEach((feature: any) => {
+          const geom = feature.geometry;
+          if (geom.type === 'Polygon') {
+            geom.coordinates.forEach((ring: number[][]) => {
+              const points = ring.map(([lon, lat]: number[]) => this.latLonToVector3(lat, lon, radius));
+              const geometry = new THREE.BufferGeometry().setFromPoints(points);
+              const line = new THREE.Line(geometry, material);
+              this.scene.add(line);
+            });
+          } else if (geom.type === 'MultiPolygon') {
+            geom.coordinates.forEach((polygon: number[][][]) => {
+              polygon.forEach((ring: number[][]) => {
+                const points = ring.map(([lon, lat]: number[]) => this.latLonToVector3(lat, lon, radius));
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const line = new THREE.Line(geometry, material);
+                this.scene.add(line);
+              });
+            });
+          }
+        });
+      });
+  }
+
+  private latLonToVector3(lat: number, lon: number, radius: number): THREE.Vector3 {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lon + 180) * (Math.PI / 180);
+    const x = -radius * Math.sin(phi) * Math.cos(theta);
+    const z = radius * Math.sin(phi) * Math.sin(theta);
+    const y = radius * Math.cos(phi);
+    return new THREE.Vector3(x, y, z);
   }
 
   private animate(): void {
