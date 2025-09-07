@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,8 +11,6 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
   isMenuOpen = false;
 
-  constructor(public router: Router) {}
-
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -22,8 +19,11 @@ export class HeaderComponent {
     this.isMenuOpen = false;
   }
 
-  navigateTo(path: string) {
-    this.router.navigate([path]);
+  navigateTo(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
     this.closeMenu();
   }
 }

@@ -1,62 +1,51 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header';
 import { FooterComponent } from './components/footer/footer';
-import { SeoService } from './services/seo.service';
+import { GlobeComponent } from './components/globe/globe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, FooterComponent],
+  imports: [FormsModule, HeaderComponent, FooterComponent, GlobeComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'gaulia-tech';
 
-  constructor(private seoService: SeoService) {}
+  // Dados do formulário de contato
+  formData = {
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    service: '',
+    message: ''
+  };
 
-  ngOnInit(): void {
-    this.seoService.init();
-    this.addSchemaOrg();
+  // Método para navegação suave entre seções
+  navigateTo(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 
-  private addSchemaOrg(): void {
-    const organizationSchema = {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Gaulia Tech",
-      "url": "https://gauliatech.com",
-      "logo": "https://gauliatech.com/assets/img/LOGO_PRETO_OTIMIZADO.png",
-      "description": "Soluções completas em tecnologia, desenvolvimento de software, consultoria em TI e inovação digital para empresas.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "BR"
-      },
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "contactType": "customer service",
-        "availableLanguage": "Portuguese"
-      },
-      "sameAs": [
-        "https://linkedin.com/company/gaulia-tech",
-        "https://github.com/gaulia-tech"
-      ]
+  // Método para envio do formulário
+  onSubmit(): void {
+    console.log('Formulário enviado:', this.formData);
+    // Aqui você pode implementar a lógica de envio
+    alert('Mensagem enviada com sucesso!');
+    
+    // Limpar o formulário
+    this.formData = {
+      name: '',
+      email: '',
+      phone: '',
+      company: '',
+      service: '',
+      message: ''
     };
-
-    const websiteSchema = {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Gaulia Tech",
-      "url": "https://gauliatech.com",
-      "description": "Soluções em tecnologia e inovação digital",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Gaulia Tech"
-      }
-    };
-
-    this.seoService.addSchemaOrg(organizationSchema);
-    this.seoService.addSchemaOrg(websiteSchema);
   }
 }

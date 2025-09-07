@@ -2,7 +2,7 @@
   <div class="container">
     <nav class="nav">
       <!-- Logo -->
-      <div class="logo" (click)="navigateTo('/home')">
+      <div class="logo" (click)="navigateTo('home')">
         <div class="logo-icon">
           <img src="assets/img/LOGO_BRANCO_OTIMIZADO.png" alt="Gaulia Tech Logo" class="logo-image">
         </div>
@@ -12,22 +12,22 @@
       <!-- Menu Desktop -->
       <ul class="nav-menu" [class.active]="isMenuOpen">
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateTo('/home')" [class.active]="router.url === '/home'">
+          <a class="nav-link" (click)="navigateTo('home')">
             Início
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateTo('/about')" [class.active]="router.url === '/about'">
+          <a class="nav-link" (click)="navigateTo('about')">
             Sobre
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateTo('/services')" [class.active]="router.url === '/services'">
+          <a class="nav-link" (click)="navigateTo('services')">
             Serviços
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="navigateTo('/contact')" [class.active]="router.url === '/contact'">
+          <a class="nav-link" (click)="navigateTo('contact')">
             Contato
           </a>
         </li>
@@ -35,7 +35,7 @@
 
       <!-- Botão CTA -->
       <div class="nav-cta">
-        <button class="btn btn-primary" (click)="navigateTo('/contact')">
+        <button class="btn btn-primary" (click)="navigateTo('contact')">
           Fale Conosco
         </button>
       </div>
