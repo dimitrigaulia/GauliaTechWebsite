@@ -63,7 +63,7 @@
               },
               "sourceMap": false,
               "extractLicenses": true,
-              "baseHref": "/gaulia-tech/"
+                "baseHref": "/GauliaTechWebsite/"
             },
             "development": {
               "optimization": false,
