@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-footer',
@@ -12,9 +11,11 @@ import { Router } from '@angular/router';
 export class FooterComponent {
   currentYear = new Date().getFullYear();
 
-  constructor(public router: Router) {}
-
-  navigateTo(path: string) {
-    this.router.navigate([path]);
+  // Método para navegação suave entre seções
+  navigateTo(sectionId: string): void {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
   }
 }
